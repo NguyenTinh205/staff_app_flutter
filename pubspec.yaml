@@ -1,0 +1,27 @@
+name: staffapp
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.10.8
+
+dependencies:
+  flutter:
+    sdk: flutter
+  get_it: ^9.2.1
+  http: ^1.6.0
+  shared_preferences: ^2.5.5
+  flutter_secure_storage: ^9.2.2
+  qr_flutter: ^4.1.0
+  socket_io_client: ^2.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - docs/logo_tivi_buffet_blue_gold.png

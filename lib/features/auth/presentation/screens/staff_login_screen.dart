@@ -160,6 +160,7 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                         // Mã nhân viên Input
                         TextField(
                           controller: _employeeCodeController,
+                          textInputAction: TextInputAction.next,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -222,6 +223,8 @@ class _StaffLoginScreenState extends State<StaffLoginScreen> {
                         TextField(
                           controller: _passwordController,
                           obscureText: _obscurePassword,
+                          textInputAction: TextInputAction.done,
+                          onSubmitted: (_) => _handleLogin(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,

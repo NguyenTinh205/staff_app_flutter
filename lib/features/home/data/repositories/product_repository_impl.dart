@@ -72,4 +72,9 @@ class ProductRepositoryImpl implements ProductRepository {
       memberId: memberId,
     );
   }
+
+  @override
+  Future<bool> cancelDraftInvoice(String invoiceId) async {
+    return await remoteDataSource.cancelDraftInvoice(invoiceId);
+  }
 }

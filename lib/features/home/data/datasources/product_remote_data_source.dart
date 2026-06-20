@@ -29,13 +29,16 @@ abstract class ProductRemoteDataSource {
     required String invoiceId,
     required int memberId,
   });
+  Future<bool> cancelDraftInvoice(String invoiceId);
 }
 
 class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
   final http.Client client;
   final FlutterSecureStorage storage;
   final String baseUrl =
-      'https://nonoily-overinfluential-deegan.ngrok-free.dev/api';
+      'https://bistred-tryptic-peter.ngrok-free.dev/api';
+  //https://bistred-tryptic-peter.ngrok-free.dev/api
+  //https://nonoily-overinfluential-deegan.ngrok-free.dev/api
 
   ProductRemoteDataSourceImpl({required this.client, required this.storage});
 
@@ -221,7 +224,10 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
     if (response.statusCode == 200 || response.statusCode == 201) {
       print("DEBUG: API Link Member Response Body = ${response.body}");
       final Map<String, dynamic> body = jsonDecode(response.body);
-      return InvoiceModel.fromJson(body['data']);
+      final invoiceData = (body['data'] != null && body['data']['invoice'] != null)
+          ? body['data']['invoice']
+          : body['data'];
+      return InvoiceModel.fromJson(invoiceData);
     } else {
       try {
         final dynamic body = jsonDecode(response.body);
@@ -233,6 +239,25 @@ class ProductRemoteDataSourceImpl implements ProductRemoteDataSource {
           );
         }
         rethrow;
+      }
+    }
+  }
+
+  @override
+  Future<bool> cancelDraftInvoice(String invoiceId) async {
+    final headers = await _getHeaders();
+    final response = await client.post(
+      Uri.parse('$baseUrl/invoice/$invoiceId/cancel'),
+      headers: headers,
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      return true;
+    } else {
+      try {
+        final dynamic body = jsonDecode(response.body);
+        throw Exception(body['message'] ?? 'Hủy hóa đơn cũ thất bại');
+      } catch (e) {
+        throw Exception(e);
       }
     }
   }

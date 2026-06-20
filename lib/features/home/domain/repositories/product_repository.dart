@@ -26,4 +26,5 @@ abstract class ProductRepository {
     required String invoiceId,
     required int memberId,
   });
+  Future<bool> cancelDraftInvoice(String invoiceId);
 }

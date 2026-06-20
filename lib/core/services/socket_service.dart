@@ -4,7 +4,9 @@ import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 class SocketService {
   static socket_io.Socket? _socket;
   static const String _serverUrl =
-      'https://nonoily-overinfluential-deegan.ngrok-free.dev';
+      'https://bistred-tryptic-peter.ngrok-free.dev';
+      //https://bistred-tryptic-peter.ngrok-free.dev
+      //https://nonoily-overinfluential-deegan.ngrok-free.dev
   static int? _currentActiveInvoiceId;
 
   static socket_io.Socket? get socket => _socket;

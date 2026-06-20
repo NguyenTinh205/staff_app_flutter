@@ -221,4 +221,22 @@ class ProductController extends ChangeNotifier {
       return null;
     }
   }
+
+  Future<bool> cancelDraftInvoice(String invoiceId) async {
+    _isLoading = true;
+    _errorMessage = null;
+    notifyListeners();
+
+    try {
+      final success = await productRepository.cancelDraftInvoice(invoiceId);
+      _isLoading = false;
+      notifyListeners();
+      return success;
+    } catch (e) {
+      _errorMessage = e.toString().replaceAll('Exception: ', '');
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
 }

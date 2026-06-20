@@ -13,6 +13,7 @@ import 'package:staffapp/features/home/data/models/invoice_model.dart';
 import 'package:staffapp/core/services/socket_service.dart';
 import 'package:staffapp/features/auth/presentation/controllers/login_controller.dart';
 import 'package:staffapp/core/widgets/custom_notification.dart';
+import 'package:staffapp/features/home/presentation/screens/invoice_history_screen.dart';
 
 class HomeShellScreen extends StatefulWidget {
   const HomeShellScreen({super.key});
@@ -599,114 +600,10 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                     elevation: 0,
                   ),
                   onPressed: () async {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) => const Center(
-                        child: CircularProgressIndicator(
-                          color: Color(0xFFFED876),
-                        ),
-                      ),
-                    );
+                    // Đóng Dialog Mở bàn ngay lập tức
+                    Navigator.of(context).pop();
 
-                    // Tìm sản phẩm Buffet từ API để lấy tên và giá thực tế
-                    final prodAdult = _productController.products.firstWhere(
-                      (p) {
-                        final nameLower = p.name.toLowerCase();
-                        return nameLower.contains('buffet') &&
-                            (nameLower.contains('người lớn') ||
-                                nameLower.contains('nguoi lon'));
-                      },
-                      orElse: () => ProductModel(
-                        id: '0',
-                        name: 'Vé Buffet Người Lớn',
-                        price: 0,
-                        categoryId: '',
-                        isAvailable: true,
-                      ),
-                    );
-                    final prodChild = _productController.products.firstWhere(
-                      (p) {
-                        final nameLower = p.name.toLowerCase();
-                        return nameLower.contains('buffet') &&
-                            (nameLower.contains('trẻ em') ||
-                                nameLower.contains('tre em'));
-                      },
-                      orElse: () => ProductModel(
-                        id: '0',
-                        name: 'Vé Buffet Trẻ Em (6-11 tuổi)',
-                        price: 0,
-                        categoryId: '',
-                        isAvailable: true,
-                      ),
-                    );
-
-                    final List<Map<String, dynamic>> initialItems = [];
-                    if (adultCount > 0) {
-                      initialItems.add({
-                        'product_id': int.tryParse(prodAdult.id) ?? 1,
-                        'product_name': prodAdult.name,
-                        'quantity': adultCount,
-                        'unit_price': prodAdult.price,
-                      });
-                    }
-                    if (childCount > 0) {
-                      initialItems.add({
-                        'product_id': int.tryParse(prodChild.id) ?? 2,
-                        'product_name': prodChild.name,
-                        'quantity': childCount,
-                        'unit_price': prodChild.price,
-                      });
-                    }
-
-                    // Tính tổng tiền tạm tính khi mở bàn để tính 1% thuế
-                    int initialTotal =
-                        (adultCount * prodAdult.price) +
-                        (childCount * prodChild.price);
-                    int surchargeVal = 0;
-                    final now = DateTime.now();
-                    final holidays = ['01-01', '30-04', '01-05', '02-09'];
-                    final currentDayMonth =
-                        "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}";
-                    if (holidays.contains(currentDayMonth)) {
-                      surchargeVal = (adultCount + childCount) * 80000;
-                    } else if (now.weekday == DateTime.saturday ||
-                        now.weekday == DateTime.sunday) {
-                      surchargeVal = (adultCount + childCount) * 50000;
-                    }
-                    int initialBaseTotal = initialTotal + surchargeVal;
-                    int calculatedTax = (initialBaseTotal * 0.10).round();
-                    int calculatedService = 0;
-
-                    // Gọi API thực tế thông qua ProductController
-                    final invoice = await _productController.createDraftInvoice(
-                      memberId: null, // Ban đầu chưa chọn thành viên
-                      tableNumber: table['name'],
-                      taxAmount: calculatedTax,
-                      serviceCharge: calculatedService,
-                      pointsMultiplier: 1,
-                      items: initialItems,
-                    );
-
-                    if (context.mounted) {
-                      Navigator.pop(context); // Đóng vòng tải loading
-                    }
-
-                    if (invoice == null) {
-                      if (context.mounted) {
-                        CustomNotification.show(
-                          context,
-                          message:
-                              _productController.errorMessage ??
-                              'Không thể mở bàn trên Server',
-                          backgroundColor: Colors.redAccent,
-                          icon: Icons.error_outline,
-                        );
-                      }
-                      return; // Không đóng dialog mở bàn nếu lỗi
-                    }
-
-                    // Lưu trạng thái và thông tin hóa đơn thật vào state của bàn
+                    // Lưu trạng thái và thông tin mở bàn cục bộ vào state
                     setState(() {
                       _tables[index]['status'] = 'serving';
                       _tables[index]['adults'] = adultCount;
@@ -714,24 +611,17 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                       _tables[index]['guests'] = adultCount + childCount;
                       _tables[index]['timeStarted'] = DateTime.now();
                       _tables[index]['orders'] = <Map<String, dynamic>>[];
-                      _tables[index]['invoice_id'] = invoice.id;
-                      _tables[index]['invoice_code'] = invoice.invoiceCode;
+                      _tables[index]['invoice_id'] = null;
+                      _tables[index]['invoice_code'] = null;
                     });
                     _saveTablesState();
 
-                    // Kết nối Socket.io và tham gia phòng của hóa đơn vừa tạo
-                    SocketService.joinInvoice(invoice.id);
-
-                    if (context.mounted) {
-                      Navigator.pop(context); // Đóng Dialog Mở bàn
-                      CustomNotification.show(
-                        context,
-                        message:
-                            'Đã mở thành công ${table['name']} (Mã HĐ: ${invoice.invoiceCode})',
-                        backgroundColor: const Color(0xFF6B5805),
-                        icon: Icons.check_circle_outline,
-                      );
-                    }
+                    CustomNotification.show(
+                      context,
+                      message: 'Đã mở thành công ${table['name']}',
+                      backgroundColor: const Color(0xFF6B5805),
+                      icon: Icons.check_circle_outline,
+                    );
                   },
                   child: const Text('Mở bàn'),
                 ),
@@ -757,7 +647,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                 nameLower.contains('nguoi lon'));
       },
       orElse: () => ProductModel(
-        id: '0',
+        id: '1',
         name: 'Vé Buffet Người Lớn',
         price: 0,
         categoryId: '',
@@ -774,7 +664,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
             (nameLower.contains('trẻ em') || nameLower.contains('tre em'));
       },
       orElse: () => ProductModel(
-        id: '0',
+        id: '2',
         name: 'Vé Buffet Trẻ Em (6-11 tuổi)',
         price: 0,
         categoryId: '',
@@ -793,12 +683,12 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
         "${now.day.toString().padLeft(2, '0')}-${now.month.toString().padLeft(2, '0')}";
 
     if (holidays.contains(currentDayMonth)) {
-      surchargePerGuest = 80000;
-      surchargeType = 'Phụ thu ngày lễ';
+      surchargePerGuest = 2000;
+      surchargeType = 'Phụ thu cuối tuần/lễ';
     } else if (now.weekday == DateTime.saturday ||
         now.weekday == DateTime.sunday) {
-      surchargePerGuest = 50000;
-      surchargeType = 'Phụ thu cuối tuần';
+      surchargePerGuest = 1000;
+      surchargeType = 'Phụ thu cuối tuần/lễ';
     }
 
     final totalGuests = adults + children;
@@ -1281,6 +1171,100 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                 : (baseTotal - discountAmount);
             final int pointsEarned = (grandTotal * 0.01).round();
 
+            Future<void> searchMember() async {
+              final phone = phoneController.text.trim();
+              if (phone.isEmpty) {
+                setDialogState(() {
+                  memberError = 'Chưa nhập SĐT';
+                });
+                return;
+              }
+
+              // Show loader
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const Center(
+                  child: CircularProgressIndicator(
+                    color: Color(0xFFFED876),
+                  ),
+                ),
+              );
+
+              final member = await _productController.searchMemberByPhone(phone);
+
+              if (context.mounted) {
+                Navigator.pop(context); // Close loading indicator
+              }
+
+              if (member != null) {
+                setDialogState(() {
+                  memberInfo = {
+                    'id': member.id,
+                    'name': member.fullName,
+                    'rank': member.tierName,
+                    'points': member.currentPoints,
+                    'pointMultiplier': member.pointMultiplier,
+                  };
+                  memberError = null;
+                });
+
+                // Update draft invoice with member id
+                final int calculatedTax =
+                    ((invoiceDetails['totalCost'] as int) * 0.10).round();
+                final int calculatedService = invoiceDetails['costSurcharge'] as int? ?? 0;
+
+                // Link member to the existing draft invoice instead of creating a new one
+                final InvoiceModel? updatedInvoice;
+                final currentInvId = table['invoice_id']?.toString() ??
+                    serverInvoice?.id.toString();
+                if (currentInvId != null) {
+                  updatedInvoice = await _productController.linkMember(
+                    invoiceId: currentInvId,
+                    memberId: member.id,
+                  );
+                } else {
+                  // Fallback to createDraftInvoice if no invoice exists yet
+                  updatedInvoice = await _productController.createDraftInvoice(
+                    memberId: member.id,
+                    tableNumber: table['name'],
+                    taxAmount: calculatedTax,
+                    serviceCharge: calculatedService,
+                    pointsMultiplier: member.pointMultiplier.toInt(),
+                    items: apiItems,
+                  );
+                }
+
+                if (updatedInvoice != null) {
+                  final actualInvoice = updatedInvoice;
+                  setDialogState(() {
+                    serverInvoice = actualInvoice;
+                    table['invoice_id'] = actualInvoice.id;
+                    table['invoice_code'] = actualInvoice.invoiceCode;
+                  });
+                  _saveTablesState();
+                  setState(() {});
+
+                  // Refresh checkout link if online payment is selected
+                  if (selectedMethodCode != null &&
+                      selectedMethodCode != 'cash') {
+                    final selectedMethod = _productController.paymentMethods
+                        .firstWhere((m) => m.code == selectedMethodCode);
+                    _productController.createCheckoutLink(
+                      invoiceId: actualInvoice.id.toString(),
+                      paymentMethodId: selectedMethod.id.toString(),
+                    );
+                  }
+                }
+              } else {
+                setDialogState(() {
+                  memberError = _productController.errorMessage ??
+                      'Không tìm thấy thành viên';
+                  memberInfo = null;
+                });
+              }
+            }
+
             if (!isLoaded) {
               isLoaded = true;
               _productController.clearCheckoutData();
@@ -1294,7 +1278,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                           nameLower.contains('nguoi lon'));
                 },
                 orElse: () => ProductModel(
-                  id: '0',
+                  id: '1',
                   name: 'Vé Buffet Người Lớn',
                   price: 0,
                   categoryId: '',
@@ -1309,7 +1293,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                           nameLower.contains('tre em'));
                 },
                 orElse: () => ProductModel(
-                  id: '0',
+                  id: '2',
                   name: 'Vé Buffet Trẻ Em (6-11 tuổi)',
                   price: 0,
                   categoryId: '',
@@ -1384,7 +1368,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
               }
 
               final int calculatedTax = (baseTotal * 0.10).round();
-              final int calculatedService = 0;
+              final int calculatedService = invoiceDetails['costSurcharge'] as int? ?? 0;
 
               final existingInvoiceId = table['invoice_id'];
               // Nếu có món gọi thêm → luôn tạo HĐ nháp mới với đầy đủ tất cả món
@@ -1438,6 +1422,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                 print(
                   "DEBUG MỞ DIALOG THANH TOÁN: Tạo HĐ nháp mới với ${apiItems.length} món = $apiItems",
                 );
+                
                 _productController
                     .createDraftInvoice(
                       memberId: memberInfo != null
@@ -1568,18 +1553,47 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                 child: Divider(color: Color(0xFF2E2E2D), height: 1),
                               ),
                               _buildDetailRow(
-                                invoiceDetails['surchargeType'],
+                                invoiceDetails['surchargeType'] ?? 'Phụ thu',
                                 '${(invoiceDetails['costSurcharge'] as int).toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
                               ),
+                            ],
                           ],
                         ),
                       ),
                       const SizedBox(height: 16),
 
                       // Món gọi thêm
+                      if (orders.isNotEmpty) ...[
+                        const Text(
+                          'MÓN GỌI THÊM:',
+                          style: TextStyle(
+                            color: Color(0xFFFED876),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1E1E1D),
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(
+                              color: const Color(0xFFFED876).withValues(alpha: 0.05),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              ...orders.map((o) {
+                                return _buildDetailRow(
+                                  '${o['name']} (x${o['quantity']})',
+                                  '${(o['price'] * o['quantity']).toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
+                                );
+                              }).toList(),
                             ],
                           ),
                         ),
+                        const SizedBox(height: 16),
                       ],
                       _buildDetailRow(
                         'Tạm tính',
@@ -1725,6 +1739,8 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                             child: TextField(
                               controller: phoneController,
                               keyboardType: TextInputType.phone,
+                              textInputAction: TextInputAction.search,
+                              onSubmitted: (_) => searchMember(),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 14,
@@ -1768,115 +1784,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                               ),
-                              onPressed: () async {
-                                final phone = phoneController.text.trim();
-                                if (phone.isEmpty) {
-                                  setDialogState(() {
-                                    memberError = 'Chưa nhập SĐT';
-                                  });
-                                  return;
-                                }
-
-                                // Show loader in button or show dialog loader
-                                showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (context) => const Center(
-                                    child: CircularProgressIndicator(
-                                      color: Color(0xFFFED876),
-                                    ),
-                                  ),
-                                );
-
-                                final member = await _productController
-                                    .searchMemberByPhone(phone);
-
-                                if (context.mounted) {
-                                  Navigator.pop(
-                                    context,
-                                  ); // Close loading indicator
-                                }
-
-                                if (member != null) {
-                                  setDialogState(() {
-                                    memberInfo = {
-                                      'id': member.id,
-                                      'name': member.fullName,
-                                      'rank': member.tierName,
-                                      'points': member.currentPoints,
-                                      'pointMultiplier': member.pointMultiplier,
-                                    };
-                                    memberError = null;
-                                  });
-
-                                  // Update draft invoice with member id
-                                  final int calculatedTax =
-                                      ((invoiceDetails['totalCost'] as int) *
-                                              0.10)
-                                          .round();
-                                  final int calculatedService = 0;
-
-                                  // Link member to the existing draft invoice instead of creating a new one
-                                  final InvoiceModel? updatedInvoice;
-                                  final currentInvId =
-                                      table['invoice_id']?.toString() ??
-                                      serverInvoice?.id.toString();
-                                  if (currentInvId != null) {
-                                    updatedInvoice = await _productController
-                                        .linkMember(
-                                          invoiceId: currentInvId,
-                                          memberId: member.id,
-                                        );
-                                  } else {
-                                    // Fallback to createDraftInvoice if no invoice exists yet
-                                    updatedInvoice = await _productController
-                                        .createDraftInvoice(
-                                          memberId: member.id,
-                                          tableNumber: table['name'],
-                                          taxAmount: calculatedTax,
-                                          serviceCharge: calculatedService,
-                                          pointsMultiplier: member
-                                              .pointMultiplier
-                                              .toInt(),
-                                          items: apiItems,
-                                        );
-                                  }
-
-                                  if (updatedInvoice != null) {
-                                    final actualInvoice = updatedInvoice;
-                                    setDialogState(() {
-                                      serverInvoice = actualInvoice;
-                                      table['invoice_id'] = actualInvoice.id;
-                                      table['invoice_code'] =
-                                          actualInvoice.invoiceCode;
-                                    });
-                                    _saveTablesState();
-                                    setState(() {});
-
-                                    // Refresh checkout link if online payment is selected
-                                    if (selectedMethodCode != null &&
-                                        selectedMethodCode != 'cash') {
-                                      final selectedMethod = _productController
-                                          .paymentMethods
-                                          .firstWhere(
-                                            (m) => m.code == selectedMethodCode,
-                                          );
-                                      _productController.createCheckoutLink(
-                                        invoiceId: actualInvoice.id.toString(),
-                                        paymentMethodId: selectedMethod.id
-                                            .toString(),
-                                      );
-                                    }
-                                  }
-                                } else {
-                                  setDialogState(() {
-                                    memberError =
-                                        _productController.errorMessage ??
-                                        'Không tìm thấy thành viên';
-                                    memberInfo = null;
-                                  });
-                                }
-                              },
+                              onPressed: searchMember,
                               child: const Text('Tìm'),
                             ),
                           ),
@@ -1979,6 +1887,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                   'name': 'Nguyễn Văn A',
                                   'rank': 'Hạng Vàng',
                                   'points': 1500,
+                                  'pointMultiplier': 1.2,
                                 };
                                 memberError = null;
                               });
@@ -1995,66 +1904,100 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                             ),
                           ),
                         ),
+                      ], // Kết thúc khối if (showQrCode)
 
-                        // Hiển thị thông tin thành viên và tích lũy điểm
-                        if (memberInfo != null) ...[
-                          const SizedBox(height: 12),
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: const Color(
-                                0xFF6B5805,
-                              ).withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: const Color(
-                                  0xFF6B5805,
-                                ).withValues(alpha: 0.5),
-                              ),
+                      // Hiển thị thông tin thành viên và tích lũy điểm khi tìm thấy (Áp dụng cho cả quét QR và Tìm bằng SĐT)
+                      if (memberInfo != null) ...[
+                        const SizedBox(height: 12),
+                        Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF6B5805).withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: const Color(0xFFFED876).withValues(alpha: 0.3),
+                              width: 1,
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Khách hàng: ${memberInfo!['name']}',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.stars_rounded,
+                                    color: Color(0xFFFED876),
+                                    size: 20,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Thành viên: ${memberInfo!['name']}',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 3,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFFED876).withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(6),
+                                      border: Border.all(
+                                        color: const Color(0xFFFED876).withValues(alpha: 0.4),
+                                        width: 0.5,
                                       ),
                                     ),
-                                    Text(
+                                    child: Text(
                                       memberInfo!['rank'],
                                       style: const TextStyle(
                                         color: Color(0xFFFED876),
-                                        fontSize: 12,
+                                        fontSize: 11,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ],
+                                  ),
+                                ],
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8),
+                                child: Divider(
+                                  color: Color(0xFF2E2E2D),
+                                  height: 1,
                                 ),
-                                const SizedBox(height: 6),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'Điểm hiện tại: ${memberInfo!['points']} điểm',
-                                      style: const TextStyle(
-                                        color: Colors.white60,
-                                        fontSize: 12,
-                                      ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    'Điểm tích lũy hiện tại: ${memberInfo!['points']} điểm',
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
                                     ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+                                  Text(
+                                    'Hệ số tích điểm: x${memberInfo!['pointMultiplier'] ?? 1}',
+                                    style: const TextStyle(
+                                      color: Colors.white30,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ],
 
                       const Divider(color: Color(0xFF333332), height: 24),
@@ -2400,7 +2343,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                           nameLower.contains('nguoi lon'));
                                 },
                                 orElse: () => ProductModel(
-                                  id: '0',
+                                  id: '1',
                                   name: 'Vé Buffet Người Lớn',
                                   price: 0,
                                   categoryId: '',
@@ -2416,7 +2359,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                           nameLower.contains('tre em'));
                                 },
                                 orElse: () => ProductModel(
-                                  id: '0',
+                                  id: '2',
                                   name: 'Vé Buffet Trẻ Em (6-11 tuổi)',
                                   price: 0,
                                   categoryId: '',
@@ -2478,11 +2421,11 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                               currentDetails['totalCost'] as int;
                           final int calculatedTax = (currentBaseTotal * 0.10)
                               .round();
-                          final int calculatedService = 0;
+                          final int calculatedService = currentDetails['costSurcharge'] as int? ?? 0;
 
                           // Gọi API tạo hóa đơn nháp thực tế trên backend nếu chưa có hoặc có món gọi thêm cần đồng bộ
                           final InvoiceModel? nullableInvoice;
-                          if (serverInvoice != null && orders.isEmpty) {
+                          if (serverInvoice != null) {
                             nullableInvoice = serverInvoice;
                           } else {
                             nullableInvoice = await _productController
@@ -2720,6 +2663,374 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  void _authenticateAndShowTableManager() {
+    final controller = TextEditingController();
+    String? pinError;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              backgroundColor: const Color(0xFF222221),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+                side: const BorderSide(color: Color(0xFF333332), width: 1),
+              ),
+              title: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.lock_outline_rounded, color: Colors.redAccent),
+                  SizedBox(width: 10),
+                  Text(
+                    'Quyền hủy bàn & hóa đơn',
+                    style: TextStyle(
+                      color: Colors.redAccent,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'Vui lòng nhập mã PIN quản lý để truy cập tính năng hủy bàn & hóa đơn.',
+                    style: TextStyle(color: Colors.white70, fontSize: 13),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: controller,
+                    obscureText: true,
+                    keyboardType: TextInputType.number,
+                    autofocus: true,
+                    textAlign: TextAlign.center,
+                    maxLength: 6,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 8,
+                    ),
+                    decoration: InputDecoration(
+                      counterText: '',
+                      enabledBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Color(0xFF7A704A)),
+                      ),
+                      focusedBorder: const UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent),
+                      ),
+                      errorText: pinError,
+                      errorStyle: const TextStyle(color: Colors.redAccent),
+                    ),
+                  ),
+                ],
+              ),
+              actionsAlignment: MainAxisAlignment.spaceEvenly,
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'Hủy',
+                    style: TextStyle(
+                      color: Color(0xFF7A704A),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                FilledButton(
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  onPressed: () {
+                    final pin = controller.text.trim();
+                    if (pin == '2026') {
+                      Navigator.pop(context);
+                      _showTableManagerBottomSheet();
+                    } else {
+                      setDialogState(() {
+                        pinError = 'Mã PIN không đúng!';
+                      });
+                    }
+                  },
+                  child: const Text(
+                    'Xác nhận',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _showTableManagerBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF151514),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            final activeTables = _tables.asMap().entries.where((entry) => entry.value['status'] == 'serving').toList();
+
+            return Container(
+              padding: const EdgeInsets.all(24),
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.7,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Row(
+                        children: [
+                          Icon(Icons.table_bar_rounded, color: Colors.redAccent),
+                          SizedBox(width: 8),
+                          Text(
+                            'Quản lý & Hủy bàn ăn',
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close, color: Colors.white38),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Danh sách các bàn ăn đang hoạt động. Quản lý có thể giải phóng bàn và hủy hóa đơn nháp tương ứng.',
+                    style: TextStyle(color: Colors.white30, fontSize: 12),
+                  ),
+                  const SizedBox(height: 16),
+                  Expanded(
+                    child: activeTables.isEmpty
+                        ? const Center(
+                            child: Text(
+                              'Không có bàn ăn nào đang hoạt động',
+                              style: TextStyle(color: Colors.white24, fontSize: 14),
+                            ),
+                          )
+                        : ListView.separated(
+                            itemCount: activeTables.length,
+                            separatorBuilder: (context, index) => const Divider(color: Color(0xFF2E2E2D), height: 16),
+                            itemBuilder: (context, index) {
+                              final entry = activeTables[index];
+                              final int tableIndex = entry.key;
+                              final table = entry.value;
+                              final int adults = table['adults'] ?? 0;
+                              final int children = table['children'] ?? 0;
+                              final orders = List<Map<String, dynamic>>.from(table['orders'] ?? []);
+                              final details = _calculateInvoiceDetails(adults, children, orders);
+                              final totalCost = details['totalCost'] as int;
+
+                              final hasInvoiceOnServer = table['invoice_id'] != null;
+
+                              return Row(
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              table['name'] ?? '',
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                              decoration: BoxDecoration(
+                                                color: hasInvoiceOnServer
+                                                    ? Colors.green.withValues(alpha: 0.15)
+                                                    : Colors.amber.withValues(alpha: 0.15),
+                                                borderRadius: BorderRadius.circular(4),
+                                              ),
+                                              child: Text(
+                                                hasInvoiceOnServer ? 'Đã lưu server' : 'Chỉ lưu local (Chưa xem bill)',
+                                                style: TextStyle(
+                                                  color: hasInvoiceOnServer ? Colors.green : Colors.amber,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Số khách: $adults người lớn, $children trẻ em • Tạm tính: ${totalCost.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
+                                          style: const TextStyle(color: Colors.white54, fontSize: 12),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  ElevatedButton.icon(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.redAccent.withValues(alpha: 0.2),
+                                      foregroundColor: Colors.redAccent,
+                                      elevation: 0,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        side: const BorderSide(color: Colors.redAccent, width: 0.5),
+                                      ),
+                                    ),
+                                    icon: const Icon(Icons.delete_sweep_rounded, size: 16),
+                                    label: const Text('Hủy bàn', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                    onPressed: () async {
+                                      final bool? confirmCancel = await showDialog<bool>(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          backgroundColor: const Color(0xFF161615),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(20),
+                                            side: const BorderSide(color: Color(0xFF333332), width: 1),
+                                          ),
+                                          title: Row(
+                                            children: [
+                                              Icon(Icons.warning_amber_rounded, color: hasInvoiceOnServer ? Colors.redAccent : Colors.amber),
+                                              const SizedBox(width: 8),
+                                              const Text('Xác nhận hủy bàn', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                                            ],
+                                          ),
+                                          content: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text('Bạn có chắc chắn muốn giải phóng ${table['name']} và hủy tất cả món ăn?', style: const TextStyle(color: Colors.white70)),
+                                              const SizedBox(height: 12),
+                                              if (!hasInvoiceOnServer)
+                                                Container(
+                                                  padding: const EdgeInsets.all(10),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.amber.withValues(alpha: 0.1),
+                                                    borderRadius: BorderRadius.circular(8),
+                                                    border: Border.all(color: Colors.amber, width: 0.5),
+                                                  ),
+                                                  child: const Row(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Icon(Icons.warning, color: Colors.amber, size: 18),
+                                                      SizedBox(width: 8),
+                                                      Expanded(
+                                                        child: Text(
+                                                          '⚠️ CẢNH BÁO: Bàn ăn này chưa được lưu nháp lên Server. Khi hủy, toàn bộ món ăn đã gọi cục bộ sẽ bị XÓA SẠCH ngay lập tức!',
+                                                          style: TextStyle(color: Colors.amber, fontSize: 11, fontWeight: FontWeight.bold),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              else
+                                                const Text('Hệ thống sẽ đồng thời gửi lệnh Hủy hóa đơn nháp lên Server.', style: TextStyle(color: Colors.white30, fontSize: 11)),
+                                            ],
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(context, false),
+                                              child: const Text('Không', style: TextStyle(color: Colors.white38)),
+                                            ),
+                                            TextButton(
+                                              style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+                                              onPressed: () => Navigator.pop(context, true),
+                                              child: const Text('Đồng ý hủy', style: TextStyle(fontWeight: FontWeight.bold)),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+
+                                      if (confirmCancel == true) {
+                                        if (!context.mounted) return;
+                                        showDialog(
+                                          context: context,
+                                          barrierDismissible: false,
+                                          builder: (context) => const Center(
+                                            child: CircularProgressIndicator(color: Colors.redAccent),
+                                          ),
+                                        );
+
+                                        try {
+                                          final invoiceId = table['invoice_id'];
+                                          if (invoiceId != null) {
+                                            await _productController.cancelDraftInvoice(invoiceId.toString());
+                                          }
+
+                                          setState(() {
+                                            _tables[tableIndex]['status'] = 'empty';
+                                            _tables[tableIndex]['adults'] = 0;
+                                            _tables[tableIndex]['children'] = 0;
+                                            _tables[tableIndex]['guests'] = 0;
+                                            _tables[tableIndex]['timeStarted'] = null;
+                                            _tables[tableIndex]['orders'] = <Map<String, dynamic>>[];
+                                            _tables[tableIndex]['invoice_id'] = null;
+                                            _tables[tableIndex]['invoice_code'] = null;
+                                          });
+                                          _saveTablesState();
+
+                                          if (context.mounted) Navigator.pop(context);
+
+                                          setSheetState(() {});
+
+                                          if (context.mounted) {
+                                            CustomNotification.show(
+                                              context,
+                                              message: 'Đã hủy bàn ${table['name']} thành công.',
+                                              backgroundColor: Colors.redAccent,
+                                              icon: Icons.delete_outline_rounded,
+                                            );
+                                          }
+                                        } catch (e) {
+                                          if (context.mounted) Navigator.pop(context);
+                                          if (context.mounted) {
+                                            CustomNotification.show(
+                                              context,
+                                              message: 'Lỗi: ${e.toString()}',
+                                              backgroundColor: Colors.redAccent,
+                                              icon: Icons.error_outline_rounded,
+                                            );
+                                          }
+                                        }
+                                      }
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -2997,6 +3308,29 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
               ),
               const Divider(color: Color(0xFF333332)),
               ListTile(
+                leading: const Icon(
+                  Icons.table_bar_rounded,
+                  color: Colors.redAccent,
+                ),
+                title: const Text(
+                  'Quản trị & Hủy bàn ăn',
+                  style: TextStyle(color: Colors.white),
+                ),
+                subtitle: const Text(
+                  'Hủy bàn đang dùng và hóa đơn nháp (PIN: 2026)',
+                  style: TextStyle(color: Color(0xFF555555)),
+                ),
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: Color(0xFF7A704A),
+                ),
+                onTap: () {
+                  Navigator.pop(context); // Đóng Cài đặt chính
+                  _authenticateAndShowTableManager();
+                },
+              ),
+              const Divider(color: Color(0xFF333332)),
+              ListTile(
                 leading: const Icon(Icons.logout, color: Colors.redAccent),
                 title: const Text(
                   'Đăng xuất tài khoản',
@@ -3202,8 +3536,8 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                           const SizedBox(width: 8),
                           Text(
                             _selectedTab == 0
-                                ? '• ${_tables.where((t) => t['status'] == 'serving').length}/${_tables.length} bàn đang dùng'
-                                : '• ${_invoices.where((inv) => inv['status'] == 'paid').length} đã thanh toán',
+                                ? ' ${_tables.where((t) => t['status'] == 'serving').length}/${_tables.length} bàn đang dùng'
+                                : '',
                             style: const TextStyle(
                               color: Color(0xFF7A704A),
                               fontSize: 12,
@@ -3257,7 +3591,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                 Expanded(
                   child: _selectedTab == 0
                       ? _buildTableMap()
-                      : _buildInvoiceHistory(),
+                      : const InvoiceHistoryScreen(),
                 ),
               ],
             ),
@@ -3942,337 +4276,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
     );
   }
 
-  Widget _buildInvoiceHistory() {
-    final totalRevenue = _invoices
-        .where((inv) => inv['status'] == 'paid')
-        .fold<int>(0, (sum, inv) => sum + (inv['amount'] as int));
-    final paidCount = _invoices.where((inv) => inv['status'] == 'paid').length;
-    final draftCount = _invoices
-        .where((inv) => inv['status'] == 'draft')
-        .length;
 
-    final filteredInvoices = _invoices.where((inv) {
-      if (_selectedInvoiceFilter == 'paid') {
-        return inv['status'] == 'paid';
-      } else if (_selectedInvoiceFilter == 'draft') {
-        return inv['status'] == 'draft';
-      }
-      return true;
-    }).toList();
-
-    return Column(
-      children: [
-        // Khối Thống kê Tổng quan (Summary Cards)
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
-          child: Row(
-            children: [
-              Expanded(
-                child: _buildSummaryCard(
-                  title: 'DOANH THU ĐÃ THU',
-                  value:
-                      '${totalRevenue.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
-                  icon: Icons.monetization_on_rounded,
-                  color: const Color(0xFFFED876),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildSummaryCard(
-                  title: 'HÓA ĐƠN HOÀN THÀNH',
-                  value: '$paidCount hóa đơn',
-                  icon: Icons.check_circle_rounded,
-                  color: Colors.greenAccent,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: _buildSummaryCard(
-                  title: 'HÓA ĐƠN NHÁP/TREO',
-                  value: '$draftCount hóa đơn',
-                  icon: Icons.assignment_rounded,
-                  color: Colors.orangeAccent,
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        // Thanh Bộ lọc (Filter Bar)
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24, 18, 24, 6),
-          child: Row(
-            children: [
-              const Text(
-                'Bộ lọc trạng thái:',
-                style: TextStyle(
-                  color: Color(0xFF7A704A),
-                  fontSize: 13,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(width: 12),
-              ...[
-                {'label': 'Tất cả', 'value': 'all'},
-                {'label': 'Đã thanh toán', 'value': 'paid'},
-                {'label': 'Hóa đơn nháp', 'value': 'draft'},
-              ].map((filter) {
-                final isSelected = _selectedInvoiceFilter == filter['value'];
-                return Padding(
-                  padding: const EdgeInsets.only(right: 8.0),
-                  child: ChoiceChip(
-                    label: Text(filter['label']!),
-                    selected: isSelected,
-                    selectedColor: const Color(0xFF6B5805),
-                    backgroundColor: const Color(0xFF1E1E1E),
-                    labelStyle: TextStyle(
-                      color: isSelected
-                          ? Colors.white
-                          : const Color(0xFF7A704A),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      side: BorderSide(
-                        color: isSelected
-                            ? const Color(0xFFFED876)
-                            : const Color(0xFF2E2E2D),
-                      ),
-                    ),
-                    onSelected: (selected) {
-                      if (selected) {
-                        setState(() {
-                          _selectedInvoiceFilter = filter['value']!;
-                        });
-                      }
-                    },
-                  ),
-                );
-              }),
-            ],
-          ),
-        ),
-
-        // Danh sách hóa đơn
-        Expanded(
-          child: filteredInvoices.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(
-                        Icons.receipt_long_rounded,
-                        size: 64,
-                        color: Color(0xFF333332),
-                      ),
-                      const SizedBox(height: 16),
-                      Text(
-                        _selectedInvoiceFilter == 'all'
-                            ? 'Chưa có hóa đơn nào được thực hiện'
-                            : _selectedInvoiceFilter == 'paid'
-                            ? 'Không tìm thấy hóa đơn đã thanh toán nào'
-                            : 'Không tìm thấy hóa đơn nháp nào',
-                        style: const TextStyle(
-                          color: Color(0xFF7A704A),
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-                  itemCount: filteredInvoices.length,
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 10),
-                  itemBuilder: (context, index) {
-                    final inv = filteredInvoices[index];
-                    final isPaid = inv['status'] == 'paid';
-                    final accentColor = isPaid
-                        ? const Color(0xFFFED876)
-                        : Colors.orangeAccent;
-
-                    return MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () => _showInvoiceDetail(inv),
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 180),
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.centerLeft,
-                              end: Alignment.centerRight,
-                              colors: isPaid
-                                  ? [
-                                      const Color(0xFF1E1C10),
-                                      const Color(0xFF161514),
-                                    ]
-                                  : [
-                                      const Color(0xFF1A1510),
-                                      const Color(0xFF161514),
-                                    ],
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: accentColor.withValues(alpha: 0.2),
-                            ),
-                          ),
-                          child: Row(
-                            children: [
-                              // Icon trạng thái
-                              Container(
-                                width: 46,
-                                height: 46,
-                                decoration: BoxDecoration(
-                                  color: accentColor.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(
-                                    color: accentColor.withValues(alpha: 0.25),
-                                  ),
-                                ),
-                                child: Icon(
-                                  isPaid
-                                      ? Icons.check_circle_rounded
-                                      : Icons.pending_actions_rounded,
-                                  color: accentColor,
-                                  size: 24,
-                                ),
-                              ),
-                              const SizedBox(width: 14),
-
-                              // Thông tin hóa đơn
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          inv['id'],
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                        // Badge bàn
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 7,
-                                            vertical: 2,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: const Color(0xFF6B5805).withValues(alpha: 0.2),
-                                            borderRadius: BorderRadius.circular(6),
-                                            border: Border.all(
-                                              color: const Color(0xFFFED876).withValues(alpha: 0.3),
-                                            ),
-                                          ),
-                                          child: Text(
-                                            inv['table'] ?? '',
-                                            style: const TextStyle(
-                                              color: Color(0xFFFED876),
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 6),
-                                        // Badge phương thức
-                                        if (inv['paymentMethod'] != null)
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 7,
-                                              vertical: 2,
-                                            ),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFF1E2A1E),
-                                              borderRadius: BorderRadius.circular(6),
-                                              border: Border.all(
-                                                color: Colors.greenAccent.withValues(alpha: 0.25),
-                                              ),
-                                            ),
-                                            child: Text(
-                                              inv['paymentMethod'],
-                                              style: const TextStyle(
-                                                color: Colors.greenAccent,
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Row(
-                                      children: [
-                                        const Icon(
-                                          Icons.access_time_rounded,
-                                          size: 11,
-                                          color: Color(0xFF555555),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          inv['time'] ?? '',
-                                          style: const TextStyle(
-                                            color: Color(0xFF666665),
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        const Icon(
-                                          Icons.people_alt_rounded,
-                                          size: 11,
-                                          color: Color(0xFF555555),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        Text(
-                                          '${inv['guests'] ?? 0} khách',
-                                          style: const TextStyle(
-                                            color: Color(0xFF666665),
-                                            fontSize: 12,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-
-                              // Số tiền + mũi tên
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    '${inv['amount'].toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
-                                    style: TextStyle(
-                                      color: accentColor,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Icon(
-                                    Icons.chevron_right_rounded,
-                                    color: const Color(0xFF444443),
-                                    size: 20,
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-        ),
-      ],
-    );
-  }
 }
 
 

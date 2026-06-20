@@ -577,7 +577,10 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
               actions: [
                 TextButton(
                   style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                   ),
                   onPressed: () => Navigator.pop(context),
                   child: const Text(
@@ -593,7 +596,10 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFFFED876),
                     foregroundColor: const Color(0xFF1E1E1E),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 12,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -749,166 +755,238 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
     showDialog(
       context: context,
       builder: (context) {
-            return AlertDialog(
-              backgroundColor: const Color(0xFF161615),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(24),
-                side: BorderSide(
-                  color: const Color(0xFFFED876).withValues(alpha: 0.15),
-                  width: 1.5,
-                ),
-              ),
-              titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 24),
-              actionsPadding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        return AlertDialog(
+          backgroundColor: const Color(0xFF161615),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+            side: BorderSide(
+              color: const Color(0xFFFED876).withValues(alpha: 0.15),
+              width: 1.5,
+            ),
+          ),
+          titlePadding: const EdgeInsets.fromLTRB(24, 24, 24, 8),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 24),
+          actionsPadding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFED876).withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: const Icon(
-                          Icons.table_restaurant_rounded,
-                          color: Color(0xFFFED876),
-                          size: 24,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        table['name'],
-                        style: const TextStyle(
-                          color: Color(0xFFFED876),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ],
-                  ),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
+                    padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF6B5805).withValues(alpha: 0.2),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                        color: const Color(0xFFFED876).withValues(alpha: 0.3),
-                        width: 1,
-                      ),
+                      color: const Color(0xFFFED876).withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Text(
-                      'ĐANG PHỤC VỤ',
-                      style: TextStyle(
-                        color: Color(0xFFFED876),
-                        fontSize: 11,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 0.5,
-                      ),
+                    child: const Icon(
+                      Icons.table_restaurant_rounded,
+                      color: Color(0xFFFED876),
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    table['name'],
+                    style: const TextStyle(
+                      color: Color(0xFFFED876),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      letterSpacing: 0.5,
                     ),
                   ),
                 ],
               ),
-              content: Container(
-                width: 480,
-                constraints: BoxConstraints(
-                  maxHeight: MediaQuery.of(context).size.height * 0.7,
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
                 ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 8),
-                      // Card thông tin chung
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1E1E1D),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFFFED876).withValues(alpha: 0.05),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF6B5805).withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: const Color(0xFFFED876).withValues(alpha: 0.3),
+                    width: 1,
+                  ),
+                ),
+                child: const Text(
+                  'ĐANG PHỤC VỤ',
+                  style: TextStyle(
+                    color: Color(0xFFFED876),
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: Container(
+            width: 480,
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.7,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 8),
+                  // Card thông tin chung
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E1E1D),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: const Color(0xFFFED876).withValues(alpha: 0.05),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildDetailRow('Người lớn', '$adults người'),
+                        if (children > 0) ...[
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            child: Divider(color: Color(0xFF2E2E2D), height: 1),
                           ),
+                          _buildDetailRow('Trẻ em', '$children người'),
+                        ],
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Divider(color: Color(0xFF2E2E2D), height: 1),
                         ),
-                        child: Column(
-                          children: [
-                            _buildDetailRow('Người lớn', '$adults người'),
-                            if (children > 0) ...[
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8),
-                                child: Divider(color: Color(0xFF2E2E2D), height: 1),
-                              ),
-                              _buildDetailRow('Trẻ em', '$children người'),
-                            ],
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Divider(color: Color(0xFF2E2E2D), height: 1),
-                            ),
-                            _buildDetailRow('Tổng số khách', '${table['guests']} người'),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Divider(color: Color(0xFF2E2E2D), height: 1),
-                            ),
-                            _buildDetailRow('Giờ bắt đầu', timeStartedStr),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Divider(color: Color(0xFF2E2E2D), height: 1),
-                            ),
-                            _buildDetailRow('Thời gian đã ngồi', elapsedTimeStr),
-                          ],
+                        _buildDetailRow(
+                          'Tổng số khách',
+                          '${table['guests']} người',
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Divider(color: Color(0xFF2E2E2D), height: 1),
+                        ),
+                        _buildDetailRow('Giờ bắt đầu', timeStartedStr),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Divider(color: Color(0xFF2E2E2D), height: 1),
+                        ),
+                        _buildDetailRow('Thời gian đã ngồi', elapsedTimeStr),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Món gọi thêm
+                  if (orders.isNotEmpty) ...[
+                    const Text(
+                      'Món gọi thêm:',
+                      style: TextStyle(
+                        color: Color(0xFFFED876),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1E1E1D),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: const Color(
+                            0xFFFED876,
+                          ).withValues(alpha: 0.05),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: const [
+                              SizedBox(
+                                width: 25,
+                                child: Text(
+                                  'STT',
+                                  style: TextStyle(
+                                    color: Color(0xFF7A704A),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 5,
+                                child: Text(
+                                  'Tên món',
+                                  style: TextStyle(
+                                    color: Color(0xFF7A704A),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 30,
+                                child: Text(
+                                  'SL',
+                                  style: TextStyle(
+                                    color: Color(0xFF7A704A),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              Expanded(
+                                flex: 3,
+                                child: Text(
+                                  'T.Tiền',
+                                  style: TextStyle(
+                                    color: Color(0xFF7A704A),
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 8),
+                            child: Divider(color: Color(0xFF2E2E2D), height: 1),
+                          ),
+                          ...List.generate(orders.length, (idx) {
+                            final item = orders[idx];
+                            final int price = item['price'] as int;
+                            final int qty = item['quantity'] as int;
+                            final int itemTotal = price * qty;
+                            final totalStr = itemTotal
+                                .toString()
+                                .replaceAllMapped(
+                                  RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                                  (Match m) => "${m[1]}.",
+                                );
 
-                      // Món gọi thêm
-                      if (orders.isNotEmpty) ...[
-                        const Text(
-                          'Món gọi thêm:',
-                          style: TextStyle(
-                            color: Color(0xFFFED876),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1E1E1D),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: const Color(0xFFFED876).withValues(alpha: 0.05),
-                            ),
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: const [
-                                  SizedBox(width: 25, child: Text('STT', style: TextStyle(color: Color(0xFF7A704A), fontSize: 11, fontWeight: FontWeight.bold))),
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Row(
+                                children: [
                                   Expanded(
                                     flex: 5,
                                     child: Text(
-                                      'Tên món',
-                                      style: TextStyle(
-                                        color: Color(0xFF7A704A),
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold,
+                                      item['name'],
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ),
-                                  SizedBox(
-                                    width: 30,
+                                  Expanded(
+                                    flex: 2,
                                     child: Text(
-                                      'SL',
-                                      style: TextStyle(
-                                        color: Color(0xFF7A704A),
-                                        fontSize: 11,
+                                      '$qty',
+                                      style: const TextStyle(
+                                        color: Color(0xFFFED876),
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                       ),
                                       textAlign: TextAlign.center,
@@ -917,10 +995,10 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                   Expanded(
                                     flex: 3,
                                     child: Text(
-                                      'T.Tiền',
-                                      style: TextStyle(
-                                        color: Color(0xFF7A704A),
-                                        fontSize: 11,
+                                      '$totalStr đ',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13,
                                         fontWeight: FontWeight.bold,
                                       ),
                                       textAlign: TextAlign.right,
@@ -928,205 +1006,167 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                   ),
                                 ],
                               ),
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8),
-                                child: Divider(color: Color(0xFF2E2E2D), height: 1),
-                              ),
-                              ...List.generate(orders.length, (idx) {
-                                final item = orders[idx];
-                                final int price = item['price'] as int;
-                                final int qty = item['quantity'] as int;
-                                final int itemTotal = price * qty;
-                                final totalStr = itemTotal.toString().replaceAllMapped(
-                                  RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
-                                  (Match m) => "${m[1]}.",
-                                );
-
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 6),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        flex: 5,
-                                        child: Text(
-                                          item['name'],
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Text(
-                                          '$qty',
-                                          style: const TextStyle(
-                                            color: Color(0xFFFED876),
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 3,
-                                        child: Text(
-                                          '$totalStr đ',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          textAlign: TextAlign.right,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              }),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-
-                      // Chi phí chi tiết
-                      const Text(
-                        'Chi tiết chi phí:',
-                        style: TextStyle(
-                          color: Color(0xFFFED876),
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
+                            );
+                          }),
+                        ],
                       ),
-                      const SizedBox(height: 8),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF1E1E1D),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: const Color(0xFFFED876).withValues(alpha: 0.05),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            _buildDetailRow(
-                              'Tạm tính',
-                              '${(invoiceDetails['totalCost'] - invoiceDetails['costSurcharge']).toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
-                            ),
-                            if (invoiceDetails['costSurcharge'] > 0) ...[
-                              const Padding(
-                                padding: EdgeInsets.symmetric(vertical: 6),
-                                child: Divider(color: Color(0xFF2E2E2D), height: 1),
-                              ),
-                              _buildDetailRow(
-                                invoiceDetails['surchargeType'],
-                                '${(invoiceDetails['costSurcharge'] as int).toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
-                              ),
-                            ],
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 6),
-                              child: Divider(color: Color(0xFF2E2E2D), height: 1),
-                            ),
-                            _buildDetailRow(
-                              'Phí dịch vụ',
-                              '${calculatedService.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 6),
-                              child: Divider(color: Color(0xFF2E2E2D), height: 1),
-                            ),
-                            _buildDetailRow(
-                              'Thuế (VAT)',
-                              '${calculatedTax.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 8),
-                              child: Divider(color: Color(0xFF2E2E2D), height: 1),
-                            ),
-                            _buildDetailRow(
-                              'Ước lượng hóa đơn',
-                              '${estimatedTotal.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
-                              valueColor: const Color(0xFFFED876),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
+                    ),
+                    const SizedBox(height: 16),
+                  ],
+
+                  // Chi phí chi tiết
+                  const Text(
+                    'Chi tiết chi phí:',
+                    style: TextStyle(
+                      color: Color(0xFFFED876),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                   ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF1E1E1D),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: const Color(0xFFFED876).withValues(alpha: 0.05),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildDetailRow(
+                          'Tạm tính',
+                          '${(invoiceDetails['totalCost'] - invoiceDetails['costSurcharge']).toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
+                        ),
+                        if (invoiceDetails['costSurcharge'] > 0) ...[
+                          const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 6),
+                            child: Divider(color: Color(0xFF2E2E2D), height: 1),
+                          ),
+                          _buildDetailRow(
+                            invoiceDetails['surchargeType'],
+                            '${(invoiceDetails['costSurcharge'] as int).toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
+                          ),
+                        ],
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 6),
+                          child: Divider(color: Color(0xFF2E2E2D), height: 1),
+                        ),
+                        _buildDetailRow(
+                          'Phí dịch vụ',
+                          '${calculatedService.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 6),
+                          child: Divider(color: Color(0xFF2E2E2D), height: 1),
+                        ),
+                        _buildDetailRow(
+                          'Thuế (VAT)',
+                          '${calculatedTax.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8),
+                          child: Divider(color: Color(0xFF2E2E2D), height: 1),
+                        ),
+                        _buildDetailRow(
+                          'Ước lượng hóa đơn',
+                          '${estimatedTotal.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
+                          valueColor: const Color(0xFFFED876),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
                 ),
               ),
-              actions: [
-                TextButton(
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                  ),
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text(
-                    'Đóng',
-                    style: TextStyle(color: Color(0xFF7A704A), fontWeight: FontWeight.bold),
-                  ),
+              onPressed: () => Navigator.pop(context),
+              child: const Text(
+                'Đóng',
+                style: TextStyle(
+                  color: Color(0xFF7A704A),
+                  fontWeight: FontWeight.bold,
                 ),
-                FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFFFED876).withValues(alpha: 0.15),
-                    foregroundColor: const Color(0xFFFED876),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: const BorderSide(color: Color(0xFFFED876), width: 1),
+              ),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(
+                  0xFFFED876,
+                ).withValues(alpha: 0.15),
+                foregroundColor: const Color(0xFFFED876),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: const BorderSide(color: Color(0xFFFED876), width: 1),
+                ),
+                elevation: 0,
+              ),
+              onPressed: () async {
+                Navigator.pop(context); // Đóng Dialog chi tiết
+                final result = await Navigator.push<List<Map<String, dynamic>>>(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => OrderProductScreen(
+                      tableName: table['name'],
+                      initialOrders: orders,
                     ),
-                    elevation: 0,
                   ),
-                  onPressed: () async {
-                    Navigator.pop(context); // Đóng Dialog chi tiết
-                    final result = await Navigator.push<List<Map<String, dynamic>>>(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => OrderProductScreen(
-                          tableName: table['name'],
-                          initialOrders: orders,
-                        ),
-                      ),
-                    );
-                    if (result != null) {
-                      print("DEBUG MÀN HÌNH CHÍNH (NHẬN MÓN ĐÃ GỌI): $result");
-                      setState(() {
-                        _tables[index]['orders'] = result;
-                      });
-                      _saveTablesState();
-                      // Hiển thị lại chi tiết với cập nhật mới
-                      _viewTableDetail(index);
-                    }
-                  },
-                  child: const Text('Gọi món / Thêm món', style: TextStyle(fontWeight: FontWeight.bold)),
+                );
+                if (result != null) {
+                  print("DEBUG MÀN HÌNH CHÍNH (NHẬN MÓN ĐÃ GỌI): $result");
+                  setState(() {
+                    _tables[index]['orders'] = result;
+                  });
+                  _saveTablesState();
+                  // Hiển thị lại chi tiết với cập nhật mới
+                  _viewTableDetail(index);
+                }
+              },
+              child: const Text(
+                'Gọi món / Thêm món',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(
+                backgroundColor: const Color(0xFFFED876),
+                foregroundColor: const Color(0xFF1E1E1E),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
                 ),
-                FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: const Color(0xFFFED876),
-                    foregroundColor: const Color(0xFF1E1E1E),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
-                  onPressed: () {
-                    Navigator.pop(context); // Đóng Dialog chi tiết
-                    _showPaymentConfirmationDialog(
-                      context,
-                      index,
-                    ); // Mở Dialog xác nhận thanh toán
-                  },
-                  child: const Text(
-                    'Thanh toán',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
-            );
+                elevation: 0,
+              ),
+              onPressed: () {
+                Navigator.pop(context); // Đóng Dialog chi tiết
+                _showPaymentConfirmationDialog(
+                  context,
+                  index,
+                ); // Mở Dialog xác nhận thanh toán
+              },
+              child: const Text(
+                'Thanh toán',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
+        );
       },
     ).then((_) {
       if (_activeDialogTable == table['name']) {
@@ -1185,13 +1225,13 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                 context: context,
                 barrierDismissible: false,
                 builder: (context) => const Center(
-                  child: CircularProgressIndicator(
-                    color: Color(0xFFFED876),
-                  ),
+                  child: CircularProgressIndicator(color: Color(0xFFFED876)),
                 ),
               );
 
-              final member = await _productController.searchMemberByPhone(phone);
+              final member = await _productController.searchMemberByPhone(
+                phone,
+              );
 
               if (context.mounted) {
                 Navigator.pop(context); // Close loading indicator
@@ -1212,11 +1252,13 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                 // Update draft invoice with member id
                 final int calculatedTax =
                     ((invoiceDetails['totalCost'] as int) * 0.10).round();
-                final int calculatedService = invoiceDetails['costSurcharge'] as int? ?? 0;
+                final int calculatedService =
+                    invoiceDetails['costSurcharge'] as int? ?? 0;
 
                 // Link member to the existing draft invoice instead of creating a new one
                 final InvoiceModel? updatedInvoice;
-                final currentInvId = table['invoice_id']?.toString() ??
+                final currentInvId =
+                    table['invoice_id']?.toString() ??
                     serverInvoice?.id.toString();
                 if (currentInvId != null) {
                   updatedInvoice = await _productController.linkMember(
@@ -1258,7 +1300,8 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                 }
               } else {
                 setDialogState(() {
-                  memberError = _productController.errorMessage ??
+                  memberError =
+                      _productController.errorMessage ??
                       'Không tìm thấy thành viên';
                   memberInfo = null;
                 });
@@ -1368,7 +1411,8 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
               }
 
               final int calculatedTax = (baseTotal * 0.10).round();
-              final int calculatedService = invoiceDetails['costSurcharge'] as int? ?? 0;
+              final int calculatedService =
+                  invoiceDetails['costSurcharge'] as int? ?? 0;
 
               final existingInvoiceId = table['invoice_id'];
               // Nếu có món gọi thêm → luôn tạo HĐ nháp mới với đầy đủ tất cả món
@@ -1422,7 +1466,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                 print(
                   "DEBUG MỞ DIALOG THANH TOÁN: Tạo HĐ nháp mới với ${apiItems.length} món = $apiItems",
                 );
-                
+
                 _productController
                     .createDraftInvoice(
                       memberId: memberInfo != null
@@ -1528,7 +1572,9 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                           color: const Color(0xFF1E1E1D),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: const Color(0xFFFED876).withValues(alpha: 0.05),
+                            color: const Color(
+                              0xFFFED876,
+                            ).withValues(alpha: 0.05),
                           ),
                         ),
                         child: Column(
@@ -1540,7 +1586,10 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                             if (children > 0) ...[
                               const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 6),
-                                child: Divider(color: Color(0xFF2E2E2D), height: 1),
+                                child: Divider(
+                                  color: Color(0xFF2E2E2D),
+                                  height: 1,
+                                ),
                               ),
                               _buildDetailRow(
                                 'Buffet trẻ em ($children khách)',
@@ -1550,7 +1599,10 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                             if (invoiceDetails['costSurcharge'] > 0) ...[
                               const Padding(
                                 padding: EdgeInsets.symmetric(vertical: 6),
-                                child: Divider(color: Color(0xFF2E2E2D), height: 1),
+                                child: Divider(
+                                  color: Color(0xFF2E2E2D),
+                                  height: 1,
+                                ),
                               ),
                               _buildDetailRow(
                                 invoiceDetails['surchargeType'] ?? 'Phụ thu',
@@ -1579,7 +1631,9 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                             color: const Color(0xFF1E1E1D),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: const Color(0xFFFED876).withValues(alpha: 0.05),
+                              color: const Color(
+                                0xFFFED876,
+                              ).withValues(alpha: 0.05),
                             ),
                           ),
                           child: Column(
@@ -1905,17 +1959,20 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                           ),
                         ),
                       ], // Kết thúc khối if (showQrCode)
-
                       // Hiển thị thông tin thành viên và tích lũy điểm khi tìm thấy (Áp dụng cho cả quét QR và Tìm bằng SĐT)
                       if (memberInfo != null) ...[
                         const SizedBox(height: 12),
                         Container(
                           padding: const EdgeInsets.all(14),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF6B5805).withValues(alpha: 0.15),
+                            color: const Color(
+                              0xFF6B5805,
+                            ).withValues(alpha: 0.15),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: const Color(0xFFFED876).withValues(alpha: 0.3),
+                              color: const Color(
+                                0xFFFED876,
+                              ).withValues(alpha: 0.3),
                               width: 1,
                             ),
                           ),
@@ -1932,7 +1989,8 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Thành viên: ${memberInfo!['name']}',
@@ -1951,10 +2009,14 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                       vertical: 3,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFFED876).withValues(alpha: 0.1),
+                                      color: const Color(
+                                        0xFFFED876,
+                                      ).withValues(alpha: 0.1),
                                       borderRadius: BorderRadius.circular(6),
                                       border: Border.all(
-                                        color: const Color(0xFFFED876).withValues(alpha: 0.4),
+                                        color: const Color(
+                                          0xFFFED876,
+                                        ).withValues(alpha: 0.4),
                                         width: 0.5,
                                       ),
                                     ),
@@ -1977,7 +2039,8 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                 ),
                               ),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     'Điểm tích lũy hiện tại: ${memberInfo!['points']} điểm',
@@ -2421,7 +2484,8 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                               currentDetails['totalCost'] as int;
                           final int calculatedTax = (currentBaseTotal * 0.10)
                               .round();
-                          final int calculatedService = currentDetails['costSurcharge'] as int? ?? 0;
+                          final int calculatedService =
+                              currentDetails['costSurcharge'] as int? ?? 0;
 
                           // Gọi API tạo hóa đơn nháp thực tế trên backend nếu chưa có hoặc có món gọi thêm cần đồng bộ
                           final InvoiceModel? nullableInvoice;
@@ -2786,7 +2850,11 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setSheetState) {
-            final activeTables = _tables.asMap().entries.where((entry) => entry.value['status'] == 'serving').toList();
+            final activeTables = _tables
+                .asMap()
+                .entries
+                .where((entry) => entry.value['status'] == 'serving')
+                .toList();
 
             return Container(
               padding: const EdgeInsets.all(24),
@@ -2801,7 +2869,10 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                     children: [
                       const Row(
                         children: [
-                          Icon(Icons.table_bar_rounded, color: Colors.redAccent),
+                          Icon(
+                            Icons.table_bar_rounded,
+                            color: Colors.redAccent,
+                          ),
                           SizedBox(width: 8),
                           Text(
                             'Quản lý & Hủy bàn ăn',
@@ -2830,29 +2901,43 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                         ? const Center(
                             child: Text(
                               'Không có bàn ăn nào đang hoạt động',
-                              style: TextStyle(color: Colors.white24, fontSize: 14),
+                              style: TextStyle(
+                                color: Colors.white24,
+                                fontSize: 14,
+                              ),
                             ),
                           )
                         : ListView.separated(
                             itemCount: activeTables.length,
-                            separatorBuilder: (context, index) => const Divider(color: Color(0xFF2E2E2D), height: 16),
+                            separatorBuilder: (context, index) => const Divider(
+                              color: Color(0xFF2E2E2D),
+                              height: 16,
+                            ),
                             itemBuilder: (context, index) {
                               final entry = activeTables[index];
                               final int tableIndex = entry.key;
                               final table = entry.value;
                               final int adults = table['adults'] ?? 0;
                               final int children = table['children'] ?? 0;
-                              final orders = List<Map<String, dynamic>>.from(table['orders'] ?? []);
-                              final details = _calculateInvoiceDetails(adults, children, orders);
+                              final orders = List<Map<String, dynamic>>.from(
+                                table['orders'] ?? [],
+                              );
+                              final details = _calculateInvoiceDetails(
+                                adults,
+                                children,
+                                orders,
+                              );
                               final totalCost = details['totalCost'] as int;
 
-                              final hasInvoiceOnServer = table['invoice_id'] != null;
+                              final hasInvoiceOnServer =
+                                  table['invoice_id'] != null;
 
                               return Row(
                                 children: [
                                   Expanded(
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
@@ -2866,17 +2951,30 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                             ),
                                             const SizedBox(width: 8),
                                             Container(
-                                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 6,
+                                                    vertical: 2,
+                                                  ),
                                               decoration: BoxDecoration(
                                                 color: hasInvoiceOnServer
-                                                    ? Colors.green.withValues(alpha: 0.15)
-                                                    : Colors.amber.withValues(alpha: 0.15),
-                                                borderRadius: BorderRadius.circular(4),
+                                                    ? Colors.green.withValues(
+                                                        alpha: 0.15,
+                                                      )
+                                                    : Colors.amber.withValues(
+                                                        alpha: 0.15,
+                                                      ),
+                                                borderRadius:
+                                                    BorderRadius.circular(4),
                                               ),
                                               child: Text(
-                                                hasInvoiceOnServer ? 'Đã lưu server' : 'Chỉ lưu local (Chưa xem bill)',
+                                                hasInvoiceOnServer
+                                                    ? 'Đã lưu server'
+                                                    : 'Chỉ lưu local (Chưa xem bill)',
                                                 style: TextStyle(
-                                                  color: hasInvoiceOnServer ? Colors.green : Colors.amber,
+                                                  color: hasInvoiceOnServer
+                                                      ? Colors.green
+                                                      : Colors.amber,
                                                   fontSize: 10,
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -2887,80 +2985,163 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                         const SizedBox(height: 4),
                                         Text(
                                           'Số khách: $adults người lớn, $children trẻ em • Tạm tính: ${totalCost.toString().replaceAllMapped(RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"), (Match m) => "${m[1]}.")} đ',
-                                          style: const TextStyle(color: Colors.white54, fontSize: 12),
+                                          style: const TextStyle(
+                                            color: Colors.white54,
+                                            fontSize: 12,
+                                          ),
                                         ),
                                       ],
                                     ),
                                   ),
                                   ElevatedButton.icon(
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.redAccent.withValues(alpha: 0.2),
+                                      backgroundColor: Colors.redAccent
+                                          .withValues(alpha: 0.2),
                                       foregroundColor: Colors.redAccent,
                                       elevation: 0,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8),
-                                        side: const BorderSide(color: Colors.redAccent, width: 0.5),
+                                        side: const BorderSide(
+                                          color: Colors.redAccent,
+                                          width: 0.5,
+                                        ),
                                       ),
                                     ),
-                                    icon: const Icon(Icons.delete_sweep_rounded, size: 16),
-                                    label: const Text('Hủy bàn', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                                    icon: const Icon(
+                                      Icons.delete_sweep_rounded,
+                                      size: 16,
+                                    ),
+                                    label: const Text(
+                                      'Hủy bàn',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                     onPressed: () async {
-                                      final bool? confirmCancel = await showDialog<bool>(
+                                      final bool?
+                                      confirmCancel = await showDialog<bool>(
                                         context: context,
                                         builder: (context) => AlertDialog(
-                                          backgroundColor: const Color(0xFF161615),
+                                          backgroundColor: const Color(
+                                            0xFF161615,
+                                          ),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(20),
-                                            side: const BorderSide(color: Color(0xFF333332), width: 1),
+                                            borderRadius: BorderRadius.circular(
+                                              20,
+                                            ),
+                                            side: const BorderSide(
+                                              color: Color(0xFF333332),
+                                              width: 1,
+                                            ),
                                           ),
                                           title: Row(
                                             children: [
-                                              Icon(Icons.warning_amber_rounded, color: hasInvoiceOnServer ? Colors.redAccent : Colors.amber),
+                                              Icon(
+                                                Icons.warning_amber_rounded,
+                                                color: hasInvoiceOnServer
+                                                    ? Colors.redAccent
+                                                    : Colors.amber,
+                                              ),
                                               const SizedBox(width: 8),
-                                              const Text('Xác nhận hủy bàn', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                                              const Text(
+                                                'Xác nhận hủy bàn',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16,
+                                                ),
+                                              ),
                                             ],
                                           ),
                                           content: Column(
                                             mainAxisSize: MainAxisSize.min,
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
-                                              Text('Bạn có chắc chắn muốn giải phóng ${table['name']} và hủy tất cả món ăn?', style: const TextStyle(color: Colors.white70)),
+                                              Text(
+                                                'Bạn có chắc chắn muốn giải phóng ${table['name']} và hủy tất cả món ăn?',
+                                                style: const TextStyle(
+                                                  color: Colors.white70,
+                                                ),
+                                              ),
                                               const SizedBox(height: 12),
                                               if (!hasInvoiceOnServer)
                                                 Container(
-                                                  padding: const EdgeInsets.all(10),
+                                                  padding: const EdgeInsets.all(
+                                                    10,
+                                                  ),
                                                   decoration: BoxDecoration(
-                                                    color: Colors.amber.withValues(alpha: 0.1),
-                                                    borderRadius: BorderRadius.circular(8),
-                                                    border: Border.all(color: Colors.amber, width: 0.5),
+                                                    color: Colors.amber
+                                                        .withValues(alpha: 0.1),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          8,
+                                                        ),
+                                                    border: Border.all(
+                                                      color: Colors.amber,
+                                                      width: 0.5,
+                                                    ),
                                                   ),
                                                   child: const Row(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
-                                                      Icon(Icons.warning, color: Colors.amber, size: 18),
+                                                      Icon(
+                                                        Icons.warning,
+                                                        color: Colors.amber,
+                                                        size: 18,
+                                                      ),
                                                       SizedBox(width: 8),
                                                       Expanded(
                                                         child: Text(
                                                           '⚠️ CẢNH BÁO: Bàn ăn này chưa được lưu nháp lên Server. Khi hủy, toàn bộ món ăn đã gọi cục bộ sẽ bị XÓA SẠCH ngay lập tức!',
-                                                          style: TextStyle(color: Colors.amber, fontSize: 11, fontWeight: FontWeight.bold),
+                                                          style: TextStyle(
+                                                            color: Colors.amber,
+                                                            fontSize: 11,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
                                                   ),
                                                 )
                                               else
-                                                const Text('Hệ thống sẽ đồng thời gửi lệnh Hủy hóa đơn nháp lên Server.', style: TextStyle(color: Colors.white30, fontSize: 11)),
+                                                const Text(
+                                                  'Hệ thống sẽ đồng thời gửi lệnh Hủy hóa đơn nháp lên Server.',
+                                                  style: TextStyle(
+                                                    color: Colors.white30,
+                                                    fontSize: 11,
+                                                  ),
+                                                ),
                                             ],
                                           ),
                                           actions: [
                                             TextButton(
-                                              onPressed: () => Navigator.pop(context, false),
-                                              child: const Text('Không', style: TextStyle(color: Colors.white38)),
+                                              onPressed: () =>
+                                                  Navigator.pop(context, false),
+                                              child: const Text(
+                                                'Không',
+                                                style: TextStyle(
+                                                  color: Colors.white38,
+                                                ),
+                                              ),
                                             ),
                                             TextButton(
-                                              style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
-                                              onPressed: () => Navigator.pop(context, true),
-                                              child: const Text('Đồng ý hủy', style: TextStyle(fontWeight: FontWeight.bold)),
+                                              style: TextButton.styleFrom(
+                                                foregroundColor:
+                                                    Colors.redAccent,
+                                              ),
+                                              onPressed: () =>
+                                                  Navigator.pop(context, true),
+                                              child: const Text(
+                                                'Đồng ý hủy',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -2972,42 +3153,56 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                           context: context,
                                           barrierDismissible: false,
                                           builder: (context) => const Center(
-                                            child: CircularProgressIndicator(color: Colors.redAccent),
+                                            child: CircularProgressIndicator(
+                                              color: Colors.redAccent,
+                                            ),
                                           ),
                                         );
 
                                         try {
                                           final invoiceId = table['invoice_id'];
                                           if (invoiceId != null) {
-                                            await _productController.cancelDraftInvoice(invoiceId.toString());
+                                            await _productController
+                                                .cancelDraftInvoice(
+                                                  invoiceId.toString(),
+                                                );
                                           }
 
                                           setState(() {
-                                            _tables[tableIndex]['status'] = 'empty';
+                                            _tables[tableIndex]['status'] =
+                                                'empty';
                                             _tables[tableIndex]['adults'] = 0;
                                             _tables[tableIndex]['children'] = 0;
                                             _tables[tableIndex]['guests'] = 0;
-                                            _tables[tableIndex]['timeStarted'] = null;
-                                            _tables[tableIndex]['orders'] = <Map<String, dynamic>>[];
-                                            _tables[tableIndex]['invoice_id'] = null;
-                                            _tables[tableIndex]['invoice_code'] = null;
+                                            _tables[tableIndex]['timeStarted'] =
+                                                null;
+                                            _tables[tableIndex]['orders'] =
+                                                <Map<String, dynamic>>[];
+                                            _tables[tableIndex]['invoice_id'] =
+                                                null;
+                                            _tables[tableIndex]['invoice_code'] =
+                                                null;
                                           });
                                           _saveTablesState();
 
-                                          if (context.mounted) Navigator.pop(context);
+                                          if (context.mounted)
+                                            Navigator.pop(context);
 
                                           setSheetState(() {});
 
                                           if (context.mounted) {
                                             CustomNotification.show(
                                               context,
-                                              message: 'Đã hủy bàn ${table['name']} thành công.',
+                                              message:
+                                                  'Đã hủy bàn ${table['name']} thành công.',
                                               backgroundColor: Colors.redAccent,
-                                              icon: Icons.delete_outline_rounded,
+                                              icon:
+                                                  Icons.delete_outline_rounded,
                                             );
                                           }
                                         } catch (e) {
-                                          if (context.mounted) Navigator.pop(context);
+                                          if (context.mounted)
+                                            Navigator.pop(context);
                                           if (context.mounted) {
                                             CustomNotification.show(
                                               context,
@@ -3381,226 +3576,382 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 700;
+
     return Scaffold(
       backgroundColor: const Color(0xFF111110),
+      drawer: isMobile
+          ? Drawer(
+              backgroundColor: const Color(0xFF111110),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    right: BorderSide(
+                      color: const Color(0xFFFED876).withValues(alpha: 0.08),
+                      width: 1,
+                    ),
+                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        const SizedBox(height: 60),
+                        // Logo TV
+                        Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF8B7200), Color(0xFF6B5805)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(
+                                  0xFFFED876,
+                                ).withValues(alpha: 0.2),
+                                blurRadius: 12,
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              'docs/logo_tivi_buffet_blue_gold.png',
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.tv,
+                                  color: Colors.white,
+                                  size: 32,
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 40),
+                        // Tab Sơ đồ bàn
+                        ListTile(
+                          leading: Icon(
+                            Icons.grid_view_rounded,
+                            color: _selectedTab == 0
+                                ? const Color(0xFFFED876)
+                                : const Color(0xFF7A704A),
+                          ),
+                          title: Text(
+                            'Sơ đồ bàn',
+                            style: TextStyle(
+                              color: _selectedTab == 0
+                                  ? const Color(0xFFFED876)
+                                  : const Color(0xFF7A704A),
+                              fontWeight: _selectedTab == 0
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                          selected: _selectedTab == 0,
+                          selectedTileColor: const Color(
+                            0xFF6B5805,
+                          ).withValues(alpha: 0.15),
+                          onTap: () {
+                            setState(() => _selectedTab = 0);
+                            Navigator.pop(context);
+                          },
+                        ),
+                        const SizedBox(height: 8),
+                        // Tab Lịch sử hóa đơn
+                        ListTile(
+                          leading: Icon(
+                            Icons.receipt_long_rounded,
+                            color: _selectedTab == 1
+                                ? const Color(0xFFFED876)
+                                : const Color(0xFF7A704A),
+                          ),
+                          title: Text(
+                            'Hóa đơn',
+                            style: TextStyle(
+                              color: _selectedTab == 1
+                                  ? const Color(0xFFFED876)
+                                  : const Color(0xFF7A704A),
+                              fontWeight: _selectedTab == 1
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
+                            ),
+                          ),
+                          selected: _selectedTab == 1,
+                          selectedTileColor: const Color(
+                            0xFF6B5805,
+                          ).withValues(alpha: 0.15),
+                          onTap: () {
+                            setState(() => _selectedTab = 1);
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        ListTile(
+                          leading: const Icon(
+                            Icons.settings_rounded,
+                            color: Color(0xFF7A704A),
+                          ),
+                          title: const Text(
+                            'Cài đặt',
+                            style: TextStyle(color: Color(0xFF7A704A)),
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                            _showSettings();
+                          },
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            )
+          : null,
       body: DotGridBackgroundWithVignette(
         backgroundColor: const Color(0xFF111110),
         dotColor: const Color(0xFF272726),
         dotRadius: 1.1,
         spacing: 20.0,
         child: Row(
-        children: [
-          // Sidebar bên trái
-          Container(
-            width: 88,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [Color(0xFF1C1C1B), Color(0xFF141413)],
-              ),
-              border: Border(
-                right: BorderSide(
-                  color: const Color(0xFFFED876).withValues(alpha: 0.08),
-                  width: 1,
-                ),
-              ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    // Logo TV
-                    Container(
-                      width: 52,
-                      height: 52,
-                      decoration: BoxDecoration(
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF8B7200), Color(0xFF6B5805)],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(16),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFFFED876).withValues(alpha: 0.2),
-                            blurRadius: 12,
-                            spreadRadius: 0,
-                          ),
-                        ],
-                      ),
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Image.asset(
-                          'docs/logo_tivi_buffet_blue_gold.png',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return const Icon(
-                              Icons.tv,
-                              color: Colors.white,
-                              size: 26,
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 32),
-                    // Tab Sơ đồ bàn
-                    _buildSidebarItem(
-                      index: 0,
-                      icon: Icons.grid_view_rounded,
-                      label: 'Sơ đồ',
-                    ),
-                    const SizedBox(height: 8),
-                    // Tab Lịch sử hóa đơn
-                    _buildSidebarItem(
-                      index: 1,
-                      icon: Icons.receipt_long_rounded,
-                      label: 'Hóa đơn',
-                    ),
-                  ],
-                ),
-                Column(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF2A2A29),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.settings_rounded,
-                          color: Color(0xFF7A704A),
-                          size: 20,
-                        ),
-                        onPressed: _showSettings,
-                        tooltip: 'Cài đặt',
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ],
-            ),
-          ),
-
-          // Vùng hiển thị nội dung chính
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                // Header Bar
-                Container(
-                  height: 64,
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Color(0xFF1C1C1B), Color(0xFF161615)],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                    border: Border(
-                      bottom: BorderSide(
-                        color: const Color(0xFFFED876).withValues(alpha: 0.12),
-                        width: 1,
-                      ),
+          children: [
+            // Sidebar bên trái
+            if (!isMobile)
+              Container(
+                width: 88,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Color(0xFF1C1C1B), Color(0xFF141413)],
+                  ),
+                  border: Border(
+                    right: BorderSide(
+                      color: const Color(0xFFFED876).withValues(alpha: 0.08),
+                      width: 1,
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 4,
-                            height: 22,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFED876),
-                              borderRadius: BorderRadius.circular(2),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        // Logo TV
+                        Container(
+                          width: 52,
+                          height: 52,
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF8B7200), Color(0xFF6B5805)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(
+                                  0xFFFED876,
+                                ).withValues(alpha: 0.2),
+                                blurRadius: 12,
+                                spreadRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16),
+                            child: Image.asset(
+                              'docs/logo_tivi_buffet_blue_gold.png',
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return const Icon(
+                                  Icons.tv,
+                                  color: Colors.white,
+                                  size: 26,
+                                );
+                              },
                             ),
                           ),
-                          const SizedBox(width: 12),
-                          Text(
-                            _selectedTab == 0 ? 'Sơ đồ bàn' : 'Lịch sử hóa đơn',
-                            style: const TextStyle(
-                              color: Color(0xFFFED876),
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.5,
-                            ),
+                        ),
+                        const SizedBox(height: 32),
+                        // Tab Sơ đồ bàn
+                        _buildSidebarItem(
+                          index: 0,
+                          icon: Icons.grid_view_rounded,
+                          label: 'Sơ đồ',
+                        ),
+                        const SizedBox(height: 8),
+                        // Tab Lịch sử hóa đơn
+                        _buildSidebarItem(
+                          index: 1,
+                          icon: Icons.receipt_long_rounded,
+                          label: 'Hóa đơn',
+                        ),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF2A2A29),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          const SizedBox(width: 8),
-                          Text(
-                            _selectedTab == 0
-                                ? ' ${_tables.where((t) => t['status'] == 'serving').length}/${_tables.length} bàn đang dùng'
-                                : '',
-                            style: const TextStyle(
+                          child: IconButton(
+                            icon: const Icon(
+                              Icons.settings_rounded,
                               color: Color(0xFF7A704A),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
+                              size: 20,
                             ),
+                            onPressed: _showSettings,
+                            tooltip: 'Cài đặt',
                           ),
-                        ],
+                        ),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+
+            // Vùng hiển thị nội dung chính
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Header Bar
+                  Container(
+                    height: 64,
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF1C1C1B), Color(0xFF161615)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ),
-                      if (_selectedTab == 0)
+                      border: Border(
+                        bottom: BorderSide(
+                          color: const Color(
+                            0xFFFED876,
+                          ).withValues(alpha: 0.12),
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
                         Row(
-                          children: ['Tầng 1'].map((area) {
-                            final isSelected = _selectedArea == area;
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                                decoration: BoxDecoration(
-                                  color: isSelected
-                                      ? const Color(0xFF6B5805).withValues(alpha: 0.25)
-                                      : const Color(0xFF1E1E1D),
-                                  borderRadius: BorderRadius.circular(10),
-                                  border: Border.all(
-                                    color: isSelected
-                                        ? const Color(0xFFFED876).withValues(alpha: 0.6)
-                                        : const Color(0xFF2E2E2D),
+                          children: [
+                            Container(
+                              width: 4,
+                              height: 22,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFFED876),
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Text(
+                              _selectedTab == 0
+                                  ? 'Sơ đồ bàn'
+                                  : 'Lịch sử hóa đơn',
+                              style: const TextStyle(
+                                color: Color(0xFFFED876),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              _selectedTab == 0
+                                  ? ' ${_tables.where((t) => t['status'] == 'serving').length}/${_tables.length} bàn đang dùng'
+                                  : '',
+                              style: const TextStyle(
+                                color: Color(0xFF7A704A),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (_selectedTab == 0)
+                          Row(
+                            children: ['Tầng 1'].map((area) {
+                              final isSelected = _selectedArea == area;
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 10),
+                                child: AnimatedContainer(
+                                  duration: const Duration(milliseconds: 200),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                    vertical: 6,
                                   ),
-                                ),
-                                child: GestureDetector(
-                                  onTap: () => setState(() => _selectedArea = area),
-                                  child: Text(
-                                    area,
-                                    style: TextStyle(
+                                  decoration: BoxDecoration(
+                                    color: isSelected
+                                        ? const Color(
+                                            0xFF6B5805,
+                                          ).withValues(alpha: 0.25)
+                                        : const Color(0xFF1E1E1D),
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
                                       color: isSelected
-                                          ? const Color(0xFFFED876)
-                                          : const Color(0xFF7A704A),
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 13,
+                                          ? const Color(
+                                              0xFFFED876,
+                                            ).withValues(alpha: 0.6)
+                                          : const Color(0xFF2E2E2D),
+                                    ),
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () =>
+                                        setState(() => _selectedArea = area),
+                                    child: Text(
+                                      area,
+                                      style: TextStyle(
+                                        color: isSelected
+                                            ? const Color(0xFFFED876)
+                                            : const Color(0xFF7A704A),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                    ],
+                              );
+                            }).toList(),
+                          ),
+                      ],
+                    ),
                   ),
-                ),
 
-                // Nội dung chính theo Tab
-                Expanded(
-                  child: _selectedTab == 0
-                      ? _buildTableMap()
-                      : const InvoiceHistoryScreen(),
-                ),
-              ],
+                  // Nội dung chính theo Tab
+                  Expanded(
+                    child: _selectedTab == 0
+                        ? _buildTableMap()
+                        : const InvoiceHistoryScreen(),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   Widget _buildSidebarItem({
     required int index,
@@ -3657,7 +4008,9 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                             ? const Color(0xFFFED876)
                             : const Color(0xFF4A4A49),
                         fontSize: 10,
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.w500,
                         letterSpacing: 0.2,
                       ),
                     ),
@@ -3696,37 +4049,37 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
 
         // Bàn đã thanh toán PayOS nhưng chưa đóng
         final Color accentColor = isPaidTable
-            ? const Color(0xFF4CAF50)       // Xanh lá - đã TT
+            ? const Color(0xFF4CAF50) // Xanh lá - đã TT
             : isServing
-                ? const Color(0xFFFED876)   // Vàng - đang phục vụ
-                : status == 'reserved'
-                    ? const Color(0xFF7A9BC2) // Xanh - đặt trước
-                    : const Color(0xFF444443); // Xám - trống
+            ? const Color(0xFFFED876) // Vàng - đang phục vụ
+            : status == 'reserved'
+            ? const Color(0xFF7A9BC2) // Xanh - đặt trước
+            : const Color(0xFF444443); // Xám - trống
 
         final Color bgGradientStart = isPaidTable
             ? const Color(0xFF1B3A1E)
             : isServing
-                ? const Color(0xFF2A2200)
-                : status == 'reserved'
-                    ? const Color(0xFF162233)
-                    : const Color(0xFF1A1A1A);
+            ? const Color(0xFF2A2200)
+            : status == 'reserved'
+            ? const Color(0xFF162233)
+            : const Color(0xFF1A1A1A);
 
         final Color bgGradientEnd = isPaidTable
             ? const Color(0xFF0F2211)
             : isServing
-                ? const Color(0xFF1A1500)
-                : status == 'reserved'
-                    ? const Color(0xFF0D1620)
-                    : const Color(0xFF141414);
+            ? const Color(0xFF1A1500)
+            : status == 'reserved'
+            ? const Color(0xFF0D1620)
+            : const Color(0xFF141414);
 
         // ── Biểu tượng theo trạng thái ───────────────────────────────
         final IconData tableIcon = isPaidTable
             ? Icons.check_circle_rounded
             : isServing
-                ? Icons.table_restaurant_rounded
-                : status == 'reserved'
-                    ? Icons.event_seat_rounded
-                    : Icons.table_bar_outlined;
+            ? Icons.table_restaurant_rounded
+            : status == 'reserved'
+            ? Icons.event_seat_rounded
+            : Icons.table_bar_outlined;
 
         // ── Thời gian phục vụ ─────────────────────────────────────────
         String timeText = '';
@@ -3739,7 +4092,9 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
             final diff = DateTime.now().difference(ts);
             final h = diff.inHours;
             final m = diff.inMinutes % 60;
-            durationText = h > 0 ? '${h}g${m.toString().padLeft(2, '0')}p' : '${m}p';
+            durationText = h > 0
+                ? '${h}g${m.toString().padLeft(2, '0')}p'
+                : '${m}p';
           } else {
             timeText = ts.toString();
           }
@@ -3767,7 +4122,9 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                 ),
                 borderRadius: BorderRadius.circular(18),
                 border: Border.all(
-                  color: accentColor.withValues(alpha: isServing || isPaidTable ? 0.7 : 0.3),
+                  color: accentColor.withValues(
+                    alpha: isServing || isPaidTable ? 0.7 : 0.3,
+                  ),
                   width: isServing || isPaidTable ? 1.5 : 1.0,
                 ),
                 boxShadow: (isServing || isPaidTable)
@@ -3869,7 +4226,9 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
                                     vertical: 1,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF6B5805).withValues(alpha: 0.4),
+                                    color: const Color(
+                                      0xFF6B5805,
+                                    ).withValues(alpha: 0.4),
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
@@ -3947,7 +4306,6 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
       },
     );
   }
-
 
   void _showInvoiceDetail(Map<String, dynamic> inv) {
     final isPaid = inv['status'] == 'paid';
@@ -4206,15 +4564,10 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            color.withValues(alpha: 0.07),
-            const Color(0xFF161615),
-          ],
+          colors: [color.withValues(alpha: 0.07), const Color(0xFF161615)],
         ),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: color.withValues(alpha: 0.2),
-        ),
+        border: Border.all(color: color.withValues(alpha: 0.2)),
         boxShadow: [
           BoxShadow(
             color: color.withValues(alpha: 0.06),
@@ -4275,11 +4628,7 @@ class _HomeShellScreenState extends State<HomeShellScreen> {
       ),
     );
   }
-
-
 }
-
-
 
 class OutButton extends StatelessWidget {
   const OutButton({super.key, required this.onPressed, required this.child});

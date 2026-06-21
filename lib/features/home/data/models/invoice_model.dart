@@ -41,8 +41,9 @@ class InvoiceModel {
 
   factory InvoiceModel.fromJson(Map<String, dynamic> json) {
     var itemsList = json['items'] as List? ?? [];
-    List<InvoiceItemModel> parsedItems =
-        itemsList.map((i) => InvoiceItemModel.fromJson(i)).toList();
+    List<InvoiceItemModel> parsedItems = itemsList
+        .map((i) => InvoiceItemModel.fromJson(i))
+        .toList();
 
     int parseToInt(dynamic val, int defaultVal) {
       if (val == null) return defaultVal;
@@ -55,7 +56,9 @@ class InvoiceModel {
 
     final parsedId = parseToInt(json['id'], 0);
     if (parsedId == 0) {
-      throw const FormatException('ID hóa đơn không hợp lệ hoặc bằng 0 từ máy chủ');
+      throw const FormatException(
+        'ID hóa đơn không hợp lệ hoặc bằng 0 từ máy chủ',
+      );
     }
 
     return InvoiceModel(
@@ -63,7 +66,9 @@ class InvoiceModel {
       invoiceCode: json['invoice_code']?.toString() ?? '',
       employeeId: parseToInt(json['employee_id'], 0),
       branchId: parseToInt(json['branch_id'], 0),
-      memberId: json['member_id'] != null ? parseToInt(json['member_id'], 0) : null,
+      memberId: json['member_id'] != null
+          ? parseToInt(json['member_id'], 0)
+          : null,
       tableNumber: json['table_number']?.toString() ?? '',
       subTotal: parseToInt(json['sub_total'], 0),
       discountAmount: parseToInt(json['discount_amount'], 0),
